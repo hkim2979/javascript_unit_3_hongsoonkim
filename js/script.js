@@ -102,28 +102,8 @@ formElement.addEventListener('submit', (e) => {
     const isValidCVV = /^\d{3}$/.test(cVV.value);
 
     //if regex value works, then display that it works. If not, show that input is not a valid input.
-    let nameValidation = true;
-    if (!isValidName) {
-        nameSelect.parentElement.classList.add('not-valid');
-        nameSelect.parentElement.classList.remove('valid');
-        nameSelect.parentElement.lastElementChild.style.display = 'block';
-        nameValidation = false;
-    } else {
-        nameSelect.parentElement.classList.add('valid');
-        nameSelect.parentElement.classList.remove('not-valid');
-        nameSelect.parentElement.lastElementChild.style.display = 'none';
-    };
-
-    if (!isValidEmail) {
-        eMail.parentElement.classList.add('not-valid');
-        eMail.parentElement.classList.remove('valid');
-        eMail.parentElement.lastElementChild.style.display = 'block';
-        nameValidation = false;
-    } else {
-        eMail.parentElement.classList.add('valid');
-        eMail.parentElement.classList.remove('not-valid');
-        eMail.parentElement.lastElementChild.style.display = 'none';
-    };
+    const nameValidation = validateField(isValidName, nameSelect);
+    const emailValidation = validateField(isValidEmail, eMail);
 
     //To check if at least one checkbox is selected
     let activeValidation = false;
@@ -147,45 +127,31 @@ formElement.addEventListener('submit', (e) => {
     //When credit card is selected, card values need input
     let creditValidation = true;
     if (payment.value === 'credit-card') {
-        if (!isValidCard) {
-            cardNum.parentElement.classList.add('not-valid');
-            cardNum.parentElement.classList.remove('valid');
-            cardNum.parentElement.lastElementChild.style.display = 'block';
-            creditValidation = false;
-        } else {
-            cardNum.parentElement.classList.add('valid');
-            cardNum.parentElement.classList.remove('not-valid');
-            cardNum.parentElement.lastElementChild.style.display = 'none';
-        };
-
-        if (!isValidZip) {
-            zipCode.parentElement.classList.add('not-valid');
-            zipCode.parentElement.classList.remove('valid');
-            zipCode.parentElement.lastElementChild.style.display = 'block';
-            creditValidation = false;
-        } else {
-            zipCode.parentElement.classList.add('valid');
-            zipCode.parentElement.classList.remove('not-valid');
-            zipCode.parentElement.lastElementChild.style.display = 'none';
-        };
-
-        if (!isValidCVV) {
-            cVV.parentElement.classList.add('not-valid');
-            cVV.parentElement.classList.remove('valid');
-            cVV.parentElement.lastElementChild.style.display = 'block';
-            creditValidation = false;
-        } else {
-            cVV.parentElement.classList.add('valid');
-            cVV.parentElement.classList.remove('not-valid');
-            cVV.parentElement.lastElementChild.style.display = 'none';
-        };
+        const cardValidation = validateField(isValidCard, cardNum);
+        const zipValidation = validateField(isValidZip, zipCode);
+        const cvvValidation = validateField(isValidCVV, cVV);
+        creditValidation = cardValidation && zipValidation && cvvValidation;
     };
 
-    if (!(nameValidation && activeValidation && creditValidation)) {
+    if (!(nameValidation && emailValidation && activeValidation && creditValidation)) {
         e.preventDefault();
     }
-
 });
+
+//function to validate
+function validateField(isValid, element) {
+    if (!isValid) {
+        element.parentElement.classList.add('not-valid');
+        element.parentElement.classList.remove('valid');
+        element.parentElement.lastElementChild.style.display = 'block';
+        return false;
+    } else {
+        element.parentElement.classList.add('valid');
+        element.parentElement.classList.remove('not-valid');
+        element.parentElement.lastElementChild.style.display = 'none';
+        return true;
+    }
+}
 
 //decorate activity checkbox for better view
 for (let i of activitiesCheckbox) {
