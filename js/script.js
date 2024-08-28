@@ -39,23 +39,19 @@ jobRole.addEventListener('change', (e) => {
 color.disabled = true;
 
 //selected design will show corresponding color of the shirt
-design.addEventListener('change', () => {
+design.addEventListener('change', (e) => {
     //design selecting will enable color option
     color.disabled = false;
 
-    //loop through the color options, enable / disable corresponding design. data-theme and design value will be matched
-    for(let i = 0; i < colorOption.length; i++) {
-        const designSelected = design.value;
-        const colorChoice = colorOption[i].getAttribute('data-theme');
-
-        if(designSelected !== colorChoice) {
-            colorOption[i].hidden = true;
-            colorOption[i].disabled = true;
-          } else {
-            colorOption[i].hidden = false;
-            colorOption[i].disabled = false;
-          }
-
+    //loop through the color options, enable / disable corresponding design.
+    for (let i of colorOption) {
+        if (e.target.value === i.getAttribute('data-theme')) {
+            i.hidden = false;
+            i.selected = true;
+        } else {
+            i.hidden = true;
+            i.selected = false;
+        }
     }
 });
 
